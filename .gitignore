@@ -1,7 +1,4 @@
-dist/
 __pycache__/
-test.py
-./requirements.txt
 
-# documentation
+dist/
 docs/_build
