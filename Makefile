@@ -1,3 +1,5 @@
+# Makefile by Davide Ponzini
+
 NAME=toypandas
 PY=python3
 
