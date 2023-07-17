@@ -1,0 +1,65 @@
+:py:mod:`toypandas`
+===================
+
+.. py:module:: toypandas
+
+.. autoapi-nested-parse::
+
+   A library for educational purposes to simplify the syntax and notional machine of Python Pandas.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dataframe/index.rst
+   series/index.rst
+
+
+Package Contents
+----------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   toypandas.concat
+   toypandas.concat_df
+   toypandas.read_csv
+
+
+
+.. py:function:: concat(*arg)
+
+   Concatenate an arbitrary number of series #
+   Concatenate an arbitrary number of dataframe #
+
+   :param arg: Descrizione.
+
+   :returns: Descr return.
+
+
+.. py:function:: concat_df(tpl)
+
+   Descrizione generica.
+
+   :param tpl: Descrizione. - non si capisce cosa sia tpl dal nome (tupla?) - se la funzione e` concat df ha senso mettere df come nome argomento
+
+   :returns: Descr return.
+
+
+.. py:function:: read_csv(csv, **kwargs)
+
+   Descrizione generica.
+
+   :param csv: Descrizione.
+   :param kwargs: Descrizione 2.
+
+   :returns: Descr return.
+
+

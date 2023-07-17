@@ -1,0 +1,30 @@
+:py:mod:`toypandas.locating`
+============================
+
+.. py:module:: toypandas.locating
+
+.. autoapi-nested-parse::
+
+   LOCATING
+
+
+
+Module Contents
+---------------
+
+.. py:class:: Locating_s(val)
+
+
+
+
+   DAV1
+
+
+.. py:class:: Locating(val)
+
+
+
+
+   DAV2
+
+

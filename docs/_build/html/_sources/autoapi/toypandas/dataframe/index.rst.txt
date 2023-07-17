@@ -1,0 +1,127 @@
+:py:mod:`toypandas.dataframe`
+=============================
+
+.. py:module:: toypandas.dataframe
+
+.. autoapi-nested-parse::
+
+   Descrizione modulo
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   toypandas.dataframe.Dataframe
+   toypandas.dataframe.Locating
+
+
+
+
+.. py:class:: Dataframe(*args)
+
+
+   Bases: :py:obj:`pandas.core.frame.DataFrame`
+
+   Descrizione classe
+
+   .. py:property:: indexlocate
+      :type: Locating
+
+      adshf
+
+      :returns: adskfh
+
+
+   .. py:method:: show()
+
+      alkjdfk - ma sta funzione fa qualcosa?
+
+      :returns: sdlkfj
+
+
+   .. py:method:: __getitem__(*args)
+
+      adfag
+
+      :param args:
+
+      :returns: asdfsaf
+
+
+   .. py:method:: append(obj)
+
+      sadsdf
+
+      :param obj: sadfasf
+
+
+   .. py:method:: drop(item)
+
+      sadfasfs
+
+      :param item: dfasf
+
+
+   .. py:method:: dropna(**kargs)
+
+      kjasdf
+
+      :param kwargs: asdfjkh
+
+      :returns: asdkfh
+
+
+   .. py:method:: drop_duplicates()
+
+      asfasbjkasd
+
+      :returns: askfjsalj
+
+
+   .. py:method:: isnull()
+
+      asdlkfhasd
+
+      :returns: asdfkjl
+
+
+   .. py:method:: rename(*args)
+
+      laskdhf
+
+      :param args: askjdfhk
+
+
+
+.. py:class:: Locating(val)
+
+
+   Bases: :py:obj:`pandas.core.indexing._iLocIndexer`
+
+   descr classe
+
+   .. py:method:: __getitem__(*args)
+
+      dafdasf
+
+      :param args: sdafsaf
+
+      :returns: sadfj
+
+
+   .. py:method:: __setitem__(*args)
+
+      sadlkfjsldf
+
+      :param args: asdfsf
+
+      :returns: sadlfkjasl
+
+
+

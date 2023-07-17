@@ -1,0 +1,140 @@
+:py:mod:`toypandas.series`
+==========================
+
+.. py:module:: toypandas.series
+
+.. autoapi-nested-parse::
+
+   Descizione modulo
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   toypandas.series.Series
+   toypandas.series.Locating_s
+
+
+
+
+.. py:class:: Series(*args)
+
+
+   Bases: :py:obj:`pandas.core.series.Series`
+
+   Descrizione classe
+
+   .. py:property:: indexlocate
+      :type: Locating_s
+
+      Descrizione generica.
+
+      :returns: Descr return.
+
+
+   .. py:method:: __add__(other)
+
+      descr
+
+      :param other: edsaf
+
+      :returns: dfada
+
+
+   .. py:method:: __getitem__(*args)
+
+      asdfsadf
+
+      :param args: sadfad
+
+      :returns: sdfasdf
+
+
+   .. py:method:: apply(function)
+
+      Descrizione generica.
+
+      :param function: Descrizione.
+
+      :returns: Descr return.
+
+
+   .. py:method:: append(elem)
+
+      Descrizione generica.
+
+      :param elem: Descrizione.
+
+
+   .. py:method:: drop(*elem)
+
+      Descrizione generica.
+
+      :param elem: Descrizione.
+
+
+   .. py:method:: astype(tp)
+
+      Descrizione generica.
+
+      NON E` FORSE MEGLIO RINOMINARE IN as_type ?
+      e tp in new_type (non puoi usare type)
+      (occhio al refactoring)
+
+      :param tp: Descrizione.
+
+      :returns: Descr return.
+
+
+   .. py:method:: dropna()
+
+      Descr
+
+      :returns: adfasf
+
+
+   .. py:method:: show()
+
+      descr
+
+
+   .. py:method:: fillna(ph)
+
+      descr
+
+      :param ph: asdfasd - non si capisce cosa vuol dire ph
+
+
+
+.. py:class:: Locating_s(val)
+
+
+   Bases: :py:obj:`pandas.core.indexing._iLocIndexer`
+
+   Descrizione modulo
+
+   .. py:method:: __getitem__(*args)
+
+      descr
+
+      :param args: descr
+
+      :returns: descr
+
+
+   .. py:method:: __setitem__(*args)
+
+      descr
+
+      :param args: descr
+
+      :returns: descr
+
+
+
