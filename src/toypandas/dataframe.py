@@ -5,7 +5,62 @@ from __future__ import annotations
 import pandas as pd
 
 from .series import Series
-from . import concat_df
+
+
+def concat(*arg) -> Dataframe:
+    '''
+    Concatenate an arbitrary number of series #
+    Concatenate an arbitrary number of dataframe #
+
+    :param arg: Descrizione.
+
+    :returns: Descr return.
+    '''
+
+    lista = list()
+    df = True
+    for a in arg:
+        lista.append(a)
+        df = df and isinstance(a,Dataframe) # concat dataframes or series
+    if(df == True):
+        return Dataframe(pd.concat(lista, ignore_index=True))
+    else:
+        return Dataframe(pd.concat(lista, axis = 1))
+
+def concat_df(tpl) -> Dataframe:
+    '''
+    Descrizione generica.
+
+    :param tpl: Descrizione. - non si capisce cosa sia tpl dal nome (tupla?) - se la funzione e` concat df ha senso mettere df come nome argomento
+
+    :returns: Descr return.
+    '''
+
+    lista = list()
+    for a in tpl:
+        lista.append(a)
+    return Dataframe(pd.concat(lista, axis = 1))
+
+# Posso specificare la colonna per index oppure default (indice numerico da 0)
+def read_csv(csv: str, **kwargs) -> Dataframe:
+    '''
+    Descrizione generica.
+
+    :param csv: Descrizione.
+    :param kwargs: Descrizione 2.
+
+    :returns: Descr return.
+    '''
+
+    # transforming kwargs into a string
+    if(len(kwargs)>1):
+        string = str(list(kwargs.values()))
+        value_str = re.sub("\['", "", string)
+        value_str = re.sub("'\]","", value_str)
+        return Dataframe(pd.read_csv(csv, index_col = value_str))
+    else:
+        return Dataframe(pd.read_csv(csv, index_col = False))
+
 
 
 class Dataframe(pd.core.frame.DataFrame):
@@ -30,14 +85,15 @@ class Dataframe(pd.core.frame.DataFrame):
 
         return Locating(self)
 
-    def show(self) -> Dataframe:
+    def show(self):
         '''
-        alkjdfk - ma sta funzione fa qualcosa?
+        ti ho corretto la funzione -> prima ritornavi self (te la stampava solo perche` sei in modalita` interattiva).
+        ora ti stampa correttamente sempre
 
         :returns: sdlkfj
         '''
 
-        return self
+        print(self)
  
     def __getitem__(self, *args) -> Series | Dataframe:
         '''
@@ -85,23 +141,14 @@ class Dataframe(pd.core.frame.DataFrame):
             raise TypeError("Can only add series or dataframe")
 
         elif(isinstance(obj, Series)):
-            #obj.name = len(self.index)
-            #pd.concat([obj,self.loc[:]]).reset_index(drop=True)
-            #self.__init__(super().append(obj, ignore_index=True)) #append
             s = Series()
             for v, n in zip(obj.values, self.columns):
                 s.loc[n] = v
             s.name = len(self.index)
             self.__init__(super().append(s, ignore_index=True))
-            
-            #self.__init__(super().append(obj, ignore_index=False))
-            #return self
-            #temp.reset_index(drop=True, inplace=True)
-            #self.loc[len(self.index)] = obj
         elif(isinstance(obj, Dataframe)):
             for k,r in obj.iterrows():
                 self.loc[len(self.index)] = r
-            #return dataframe(self)
         
     def drop(self, item):
         '''
@@ -150,7 +197,6 @@ class Dataframe(pd.core.frame.DataFrame):
         :returns: askfjsalj
         '''
 
-        #temp = super().drop_duplicates(inplace=True)
         self = super().drop_duplicates()
         if (len(self.index) == 1):
             return Series(self)
@@ -178,16 +224,6 @@ class Dataframe(pd.core.frame.DataFrame):
             super().rename(columns={args[0]:args[1]}, inplace=True)
         else:
             raise ValueError("I expect two arguments: old column name, new column name")
-        #elif (len(args) == 1 and isinstance(args[0], series) and (len(args[0])==len(self.columns))):
-        #    old = list()
-        #    for c in self.columns:
-        #        old.append(c)
-        #    for i in args[0].index:
-        #        super().rename(columns={old[i]:args[1]}, inplace=True)
-
-
-     # for key,value in kargs.items():
-     #     super().rename(columns={key:value}, inplace=True)
 
 
 class Locating(pd.core.indexing._iLocIndexer):

@@ -10,47 +10,41 @@ class Series(pd.core.series.Series):
     
     def __init__(self, *args):
         '''
-        Descrizione generica.
+        Initialize a Series with the given values.
 
-        :param args: Descrizione.
+        :param args: Individual values or already existing Series.
         '''
 
         if(len(args) == 0):
             super().__init__()
-        #elif (len(args)>1 and isinstance(args[0], pd.core.series.Series)): #controlla che con uello sopra ancora funion
         elif (isinstance(args[0], pd.core.series.Series)): 
             super().__init__(args[0])
         else:
-            arg_list = list()
-            for elem in args:
-                arg_list.append(elem)
-            super().__init__(arg_list)
+            super().__init__(args)
 
     def __add__(self, other) -> Series:
         '''
-        descr
+        Sums two series row by row.
         
-        :param other: edsaf
+        :param other: The other series to sum.
         
-        :returns: dfada
+        :returns: A new series in which each value is the sum of the two rows.
         '''
 
         return Series(super().__add__(other))
         
-    def __getitem__(self, *args) -> Series:
+    def __getitem__(self, match: pd.core.series.Series) -> Series:
         '''
-        asdfsadf
+        Returns only the rows matching the argument.
         
-        :param args: sadfad
+        :param match: A Series of booleans (True/False). If an element is True, it will be returned.  
         
-        :returns: sdfasdf
+        :returns: A new Series with only the elements matching the argument.
         '''
-        #print(type(args))
-        #print(args)
-        if isinstance(args[0], pd.core.series.Series):
-            temp = super().__getitem__(args[0])
-            temp.reset_index(drop=True, inplace=True)
-            return Series(temp)
+
+        result = super().__getitem__(match)
+        result.reset_index(drop=True, inplace=True)
+        return Series(result)
 
     @property
     def indexlocate(self) -> Locating_s:
@@ -76,57 +70,50 @@ class Series(pd.core.series.Series):
 
     def append(self, elem):
         '''
-        Descrizione generica.
+        Appends a value at the end of the Series.
 
-        :param elem: Descrizione.
+        :param elem: The value to append.
         '''
 
         if(len(self) <= 1):
             self.astype(type(elem))
-            self.loc[len(self)] = elem
-        else:
-            self.loc[len(self)] = elem
+        self.loc[len(self)] = elem
 
-    def drop(self, *elem):
+    def drop(self, index=None):
         '''
-        Descrizione generica.
+        Removes a given element from the Series.
 
-        :param elem: Descrizione.
+        :param elem: The index of the element to remove. If not specified, remove the last element.
         '''
 
-        if (len(elem) == 0):
+        if (index is None):
             size = self.size - 1
             super().drop(size, inplace=True) 
             self.reset_index(drop=True, inplace=True)
-        else:
-            try:
-                super().drop(elem[0], inplace=True)
-                self.reset_index(drop=True, inplace=True)
-            except KeyError:
-                print("Index might not exist")
+            return
 
-    def astype(self, tp) -> Series:
+        try:
+            super().drop(index, inplace=True)
+            self.reset_index(drop=True, inplace=True)
+        except KeyError:
+            print("Index might not exist")
+
+    def astype(self, dtype) -> Series:
         '''
-        Descrizione generica.
+        Cast a Series to type ``dtype``.
 
-        NON E` FORSE MEGLIO RINOMINARE IN as_type ?
-        e tp in new_type (non puoi usare type)
-        (occhio al refactoring)
+        :param dtype: Data type
 
-        :param tp: Descrizione.
-
-        :returns: Descr return.
+        :returns: This Series, properly cast.
         '''
-        self = Series(super().astype(tp, copy=False))
+        self = Series(super().astype(dtype, copy=False))
         return self
-
-        #return serie(super().astype(tp, copy=False))
         
     def dropna(self) -> Series:
         '''
-        Descr
+        Removes all NaN values.
 
-        :returns: adfasf
+        :returns: This Series, without NaN values.
         '''
 
         self = pd.core.series.Series(self)
@@ -160,24 +147,24 @@ class Series(pd.core.series.Series):
                 print("name: ", self.name, " dtype: float")
             if(tipi == "{<class 'numpy.bool_'>}" or tipi == "{<class 'bool'>}"):
                 print("name: ", self.name, " dtype: bool")
-            #sys.stdout = open(os.devnull, 'w')
-            #return self
 
-    def fillna(self, ph):
-        '''descr
-        
-        :param ph: asdfasd - non si capisce cosa vuol dire ph
+    def fillna(self, value):
         '''
-        Series(super().fillna(ph, inplace=True))
+        Fill missing values with the given value.
+        
+        :param value: Value to use to fill holes.
+        '''
+        
+        Series(super().fillna(value, inplace=True))
 
 
 class Locating_s(pd.core.indexing._iLocIndexer):
-    '''Descrizione modulo'''
+    '''Index locator for Series'''
     def __init__(self, val):
         '''
-        descr
+        Initialize an index locator from a Series
         
-        :param val: descr
+        :param val: The Series
         '''
         
         super().__init__("iloc", val)
@@ -185,16 +172,13 @@ class Locating_s(pd.core.indexing._iLocIndexer):
     
     def __getitem__(self, *args):
         '''
-        descr
+        Return the element(s) in the required position(s).
         
-        :param args: descr
+        :param args: Index of the row to return or condition to apply to whole Series.
 
-        :returns: descr
+        :returns: The element(s) in the required position(s).
         '''
 
-        # series with one element lost their key
-        #print(args)
-        #print(type(args[0]))
         if(isinstance(args[0],slice)):
             return Series(super().__getitem__(args[0]))
         elif (self.s.empty or (len(self.s.index) <= args[0])):
@@ -204,11 +188,11 @@ class Locating_s(pd.core.indexing._iLocIndexer):
     
     def __setitem__(self, *args) -> Series:
         '''
-        descr
+        Set the given position to the given value.
 
-        :param args: descr
+        :param args: Position and new value.
 
-        :returns: descr
+        :returns: The Series.
         '''
         if(len(self.s.index) > args[0]):
             if(len(self.s.index) == 1):

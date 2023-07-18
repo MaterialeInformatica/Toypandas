@@ -4,6 +4,10 @@ NAME=toypandas
 PY=python3
 
 
+
+prepare: test documentation
+	:
+
 install: uninstall build
 	sudo $(PY) -m pip install ./dist/*.whl
 
@@ -18,10 +22,13 @@ build:
 uninstall:
 	sudo $(PY) -m pip uninstall -y $(NAME)
 
-### Documentation ###
 documentation:
-	$(PY) -m pip install autoapi
+	$(PY) -m pip install --upgrade autoapi
 	make html -C docs/
+
+test: install
+	$(PY) -m pip install --upgrade pytest
+	pytest
 
 
 ### PyPi ###
