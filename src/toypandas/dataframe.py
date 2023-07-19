@@ -3,39 +3,32 @@
 from __future__ import annotations
 
 import pandas as pd
+import re
 
 from .series import Series
 
 
-def concat(*arg) -> Dataframe:
+def concat(*args) -> Dataframe:
     '''
-    Concatenate an arbitrary number of series #
-    Concatenate an arbitrary number of dataframe #
+    Concatenate an arbitrary number of Series or Dataframes into a single Dataframe.
 
-    :param arg: Descrizione.
+    :param arg: Series or Dataframes.
 
-    :returns: Descr return.
+    :returns: A single Dataframe, containing all values provided.
     '''
 
-    lista = list()
+    if len(args) == 0:
+        return Dataframe()
+
     df = True
-    for a in arg:
-        lista.append(a)
-        df = df and isinstance(a,Dataframe) # concat dataframes or series
-    if(df == True):
-        return Dataframe(pd.concat(lista, ignore_index=True))
-    else:
-        return Dataframe(pd.concat(lista, axis = 1))
+    for arg in args:
+        df = df and isinstance(arg, Dataframe) # concat dataframes or series
+    
+    if(df):
+        return Dataframe(pd.concat(args, ignore_index=True))
+    return Dataframe(pd.concat(args, axis = 1))
 
 def concat_df(tpl) -> Dataframe:
-    '''
-    Descrizione generica.
-
-    :param tpl: Descrizione. - non si capisce cosa sia tpl dal nome (tupla?) - se la funzione e` concat df ha senso mettere df come nome argomento
-
-    :returns: Descr return.
-    '''
-
     lista = list()
     for a in tpl:
         lista.append(a)
@@ -44,12 +37,12 @@ def concat_df(tpl) -> Dataframe:
 # Posso specificare la colonna per index oppure default (indice numerico da 0)
 def read_csv(csv: str, **kwargs) -> Dataframe:
     '''
-    Descrizione generica.
+    Read data from a csv file.
 
-    :param csv: Descrizione.
+    :param csv: Path to the csv file.
     :param kwargs: Descrizione 2.
 
-    :returns: Descr return.
+    :returns: A Dataframe reprentation of the csv.
     '''
 
     # transforming kwargs into a string
@@ -64,13 +57,13 @@ def read_csv(csv: str, **kwargs) -> Dataframe:
 
 
 class Dataframe(pd.core.frame.DataFrame):
-    '''Descrizione classe'''
+    '''Representation of a table, composed of rows and columns.'''
 
     def __init__(self, *args):
         '''
-        asdflkjs
+        Initialize a new Dataframe. 
         
-        :param args: asdfas
+        :param args: Create a copy of either a Series of an existing Dataframe.
         '''
 
         super().__init__(*args)
@@ -78,32 +71,21 @@ class Dataframe(pd.core.frame.DataFrame):
     @property
     def indexlocate(self) -> Locating:
         '''
-        adshf
+        Locate a row by index.
 
-        :returns: adskfh
+        :returns: The row (Series).
         '''
 
         return Locating(self)
 
     def show(self):
         '''
-        ti ho corretto la funzione -> prima ritornavi self (te la stampava solo perche` sei in modalita` interattiva).
-        ora ti stampa correttamente sempre
-
-        :returns: sdlkfj
+        Print the contents of the Dataframe to screen
         '''
 
         print(self)
  
     def __getitem__(self, *args) -> Series | Dataframe:
-        '''
-        adfag
-        
-        :param args:
-
-        :returns: asdfsaf
-        '''
-
         if ((type(args) == tuple) and (type(args[0]) == str)):
             return Series(super().__getitem__(args[0]))
         
@@ -203,7 +185,7 @@ class Dataframe(pd.core.frame.DataFrame):
         else:
             return Dataframe(self)
 
-    def isnull(self) -> Dataframe:
+    def isnull(self):
         '''
         asdlkfhasd
 
@@ -213,27 +195,25 @@ class Dataframe(pd.core.frame.DataFrame):
         return Dataframe(super().isnull())
 
 
-    def rename(self, *args):
+    def rename(self, old_name: str, new_name: str):
         '''
-        laskdhf
+        Rename a column from ``old_name`` to ``new_name``.
 
-        :param args: askjdfhk
+        :param old_name: The old name of the column. 
+        :param new_name: The new name of the column. 
         '''
         
-        if (len(args) == 2):
-            super().rename(columns={args[0]:args[1]}, inplace=True)
-        else:
-            raise ValueError("I expect two arguments: old column name, new column name")
+        super().rename(columns={old_name:new_name}, inplace=True)
 
 
 class Locating(pd.core.indexing._iLocIndexer):
-    '''descr classe'''
+    '''Index-based locator for Dataframes'''
 
     def __init__(self, val):
         '''
-        defasdf
+        Initialize an index locator from a Dataframe
         
-        :param val: dafaf
+        :param val: The Dataframe
         '''
         
         super().__init__("iloc", val)
@@ -241,28 +221,27 @@ class Locating(pd.core.indexing._iLocIndexer):
 
     def __getitem__(self, *args) -> Series | Dataframe:
         '''
-        dafdasf
+        Return the element(s) in the required position(s).
         
-        :param args: sdafsaf
+        :param args: Index of the row to return or condition to apply to whole Dataframe.
 
-        :returns: sadfj
+        :returns: The element(s) in the required position(s).
         '''
 
         if (isinstance(args[0], int)):
-            #print(series(super().__getitem__(args[0])))
             return Series(super().__getitem__(args[0]))
         else:
             return Dataframe(super().__getitem__(args[0]))
     
     def __setitem__(self, *args) -> Dataframe:
         '''
-        sadlkfjsldf
+        Set the given position to the given value.
 
-        :param args: asdfsf
+        :param args: Position and new value.
 
-        :returns: sadlfkjasl
+        :returns: The Dataframe.
         '''
-        
+                
         if(len(self.df.index) > args[0]):
             return Dataframe(super().__setitem__(args[0],args[1]))
         else:

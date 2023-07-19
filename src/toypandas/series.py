@@ -6,7 +6,7 @@ import pandas as pd
 
 
 class Series(pd.core.series.Series):
-    '''Descrizione classe'''
+    '''Represenation of a series of values (usually a column).'''
     
     def __init__(self, *args):
         '''
@@ -49,20 +49,20 @@ class Series(pd.core.series.Series):
     @property
     def indexlocate(self) -> Locating_s:
         '''
-        Descrizione generica.
+        Locate an element by index.
 
-        :returns: Descr return.
+        :returns: The element.
         '''
 
         return Locating_s(self)
 
     def apply(self, function) -> Series:
         '''
-        Descrizione generica.
+        Apply a function of each value of the Series.
 
-        :param function: Descrizione.
+        :param function: Function to apply to each element.
 
-        :returns: Descr return.
+        :returns: The resulting Series.
         '''
 
         aux = Series(super().apply(function))
@@ -159,7 +159,7 @@ class Series(pd.core.series.Series):
 
 
 class Locating_s(pd.core.indexing._iLocIndexer):
-    '''Index locator for Series'''
+    '''Index-based locator for Series'''
     def __init__(self, val):
         '''
         Initialize an index locator from a Series
