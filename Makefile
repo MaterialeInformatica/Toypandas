@@ -12,8 +12,6 @@ install: uninstall build
 	sudo $(PY) -m pip install ./dist/*.whl
 
 build:
-	$(PY) -m pip install pipreqs
-	pipreqs --force
 	sudo $(PY) -m pip install --upgrade -r requirements.txt
 	sudo rm -rf dist/
 	$(PY) -m pip install build
@@ -29,6 +27,11 @@ documentation:
 test: install
 	$(PY) -m pip install --upgrade pytest
 	pytest
+
+
+requirements:
+	$(PY) -m pip install pipreqs
+	pipreqs --mode no-pin --force
 
 
 ### PyPi ###
