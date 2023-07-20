@@ -1,4 +1,4 @@
-import pytest
+import numpy
 from toypandas import Dataframe, Series, concat, read_csv
 
 
@@ -49,23 +49,84 @@ def test_readcsv():
 
 
 def test_append():
-    pass
+    s1 = Series(5, 6, 7)
+    s2 = Series('a', 'b', 'c')
+    s3 = Series(123, 546, 678)
+    d = concat(s1, s2)
+
+    d.append(s3)
+    assert len(d) == 4
+    assert d.indexlocate[3].indexlocate[0] == 123
+    assert d.indexlocate[3].indexlocate[1] == 546
+
+    d.append(Series(1))
+    assert len(d) == 5
+    assert d.indexlocate[4].indexlocate[0] == 1
+    assert numpy.isnan(d.indexlocate[4].indexlocate[1])
 
 
 def test_drop():
-    pass
+    s1 = Series(1, 2, 3)
+    s2 = Series(4, 5, 6)
+    d = concat(s1, s2)
+    d.rename(0, 'col0')
+    d.rename(1, 'col1')
+
+    assert len(d) == 3
+    assert len(d.columns) == 2
+
+    d.drop(1)
+    assert len(d) == 2
+    assert len(d.columns) == 2
+
+
+    d.drop('col1')
+    assert len(d) == 2
+    assert len(d.columns) == 1
 
 
 def test_dropna():
-    pass
+    s1 = Series(1, numpy.NaN, 2, 1)
+    s2 = Series(None, 'hello', 2, 1)
+    s3 = Series(7, 8, 2, 1)
+    s3 = Series(7, 8, 2, 1)
+    d = concat(s1, s2, s3)
+
+    res = d.dropna(0)
+    assert len(res) == 2
+    assert len(res.columns) == 3
+
+    res = d.dropna(1)
+    assert len(res) == 4
+    assert len(res.columns) == 1
 
 
 def test_dropduplicates():
-    pass
+    s1 = Series(4, 5, 6)
+    d = concat(s1, s1)
+
+    d = d.drop_duplicates()
+    assert len(d) == 3
+
+    d.append(Series(5, 5))
+    assert len(d) == 4
+
+    d = d.drop_duplicates()
+    d.show()
+    assert len(d) == 3
+
 
 def test_isnull():
-    pass
+    s1 = Series(1, numpy.NaN)
+    s2 = Series(None, 'hello')
+    d = concat(s1, s2)
+    result = d.isnull()
 
+    assert len(result) == 2
+    assert result.indexlocate[0].indexlocate[0] == False
+    assert result.indexlocate[0].indexlocate[1] == True
+    assert result.indexlocate[1].indexlocate[0] == True
+    assert result.indexlocate[1].indexlocate[1] == False
 
 def test_rename():
     d = read_csv('tests/data.csv')

@@ -112,31 +112,35 @@ class Dataframe(pd.core.frame.DataFrame):
 
     # semplificazione: se aggiungo riga + lunga, perdo dati aggiuntivi, se + corta mette dei nan
     # one row (series), more rows (dataframe: you can also use concat())
-    def append(self, obj):
+    def append(self, other: Series | Dataframe):
         '''
-        sadsdf
+        Appends the values of ``other`` to the current Dataframe.
+        If ``other`` is a Series, add a single row at the end with the values contained in the Series,
+        otherwise it works exactly like ``concat``.
 
-        :param obj: sadfasf
+        If appending data of different sizes, excess values will be ignored, while missing values will become NaN.
+
+        :param other: Series or Dataframe to append.
         '''
 
-        if(not(isinstance(obj, Series)) and not(isinstance(obj,Dataframe))):
+        if(not(isinstance(other, Series)) and not(isinstance(other,Dataframe))):
             raise TypeError("Can only add series or dataframe")
 
-        elif(isinstance(obj, Series)):
+        elif(isinstance(other, Series)):
             s = Series()
-            for v, n in zip(obj.values, self.columns):
+            for v, n in zip(other.values, self.columns):
                 s.loc[n] = v
             s.name = len(self.index)
-            self.__init__(super().append(s, ignore_index=True))
-        elif(isinstance(obj, Dataframe)):
-            for k,r in obj.iterrows():
+            self.loc[s.name] = s
+        elif(isinstance(other, Dataframe)):
+            for k,r in other.iterrows():
                 self.loc[len(self.index)] = r
         
     def drop(self, item):
         '''
-        sadfasfs
+        Drop the specified row or column
         
-        :param item: dfasf
+        :param item: Number of the row or name of the column.
         '''
 
         if(isinstance(item, int)):
@@ -145,38 +149,37 @@ class Dataframe(pd.core.frame.DataFrame):
         elif(isinstance(item, str)):
             super().drop(item, inplace=True, axis=1)
 
-    def dropna(self, **kargs) -> Series | Dataframe:
+    def dropna(self, index: int) -> Series | Dataframe:
         '''
-        kjasdf
+        Drop all rows or columns containing at least one Null or NaN value.
 
-        :param kwargs: asdfjkh
+        :param index: If 0 drop by row, if 1 drop by column. 
 
-        :returns: asdkfh
+        :returns: A Dataframe (or Series, if only one column remains) without null values.
         '''
 
-        if (len(kargs) > 1):
+        if index != 0 and index != 1:
             raise Exception("Error. Axis must be 0 or 1 (row or column).")    
-        elif ((kargs == {}) or (next(iter(kargs.keys())) == "axis" and next(iter(kargs.values())) == 0)):
+        
+        if index == 0:
             temp = super().dropna()
             if (len(temp.index) == 1):
                 return Series(temp)
             else:
                 return Dataframe(temp)
 
-        elif (next(iter(kargs.keys())) == "axis" and next(iter(kargs.values())) == 1):
+        if index == 1:
             temp = super().dropna(axis=1)
             if (len(temp.index) == 1):
                 return Series(temp)
             else:
                 return Dataframe(temp)
-        else:
-            raise ValueError("The axis value must be 0 or 1 (row or column respectively)")     
 
     def drop_duplicates(self) -> Series | Dataframe:
         '''
-        asfasbjkasd
+        Remove duplicate rows from a Dataframe.
         
-        :returns: askfjsalj
+        :returns: A Dataframe with no duplicate rows, or a Series if only one row remained.
         '''
 
         self = super().drop_duplicates()
@@ -187,9 +190,9 @@ class Dataframe(pd.core.frame.DataFrame):
 
     def isnull(self):
         '''
-        asdlkfhasd
+        Returns a Dataframe indicating which values are missing (NaN or None).
 
-        :returns: asdfkjl
+        :returns: a Dataframe indicating which values are missing.
         '''
 
         return Dataframe(super().isnull())
